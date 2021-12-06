@@ -10,6 +10,20 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      // Auth
+      "@auth/*": [ "src/auth/*" ],
+      // Guards
+      "@guards/*": [ "src/auth/guards/*" ],
+      //Decorators
+      "@decorators/*": [ "src/auth/decorators/*" ],
+      // Config
+      "@configdata/*": [ "src/config/*" ],
+      // Database
+      "@database/*": [ "src/database/*" ],
+      // Modulos
+      "@modules/*": [ "src/modules/*" ],
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
