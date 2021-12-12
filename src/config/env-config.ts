@@ -13,6 +13,11 @@ export default registerAs('config', () => {
       host: process.env.MONGO_HOST,
       connection: process.env.MONGO_CONNECTION,
     },
+    amq: {
+      url: process.env.AMQP_URL,
+      queue: process.env.AMQP_QUEUE,
+      name: process.env.AMQP_NAME,
+    },
     apiKey: process.env.API_KEY,
     jwtSecret: process.env.JWT_SECRET,
   };

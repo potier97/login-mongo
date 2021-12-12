@@ -1,18 +1,29 @@
 import { NestFactory } from '@nestjs/core';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { AppModule } from './app.module';
-
-const corsConfig: CorsOptions = {
-  origin: '*',
-  methods: 'GET,HEAD,PUT,POST,DELETE',
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
+import config from '@configdata/env-config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const appConfig = config().amq;
+  const host = appConfig.url;
+  const queue = appConfig.queue;
+  //CONFIGURACION DE CONEXION A RABBIT
+  const microserviceOptions: MicroserviceOptions = {
+    transport: Transport.RMQ,
+    options: {
+      urls: [host],
+      queue: queue,
+      queueOptions: {
+        durable: false,
+      },
+    },
+  };
+
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    microserviceOptions,
+  );
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,9 +34,6 @@ async function bootstrap() {
     }),
   );
 
-  // CORS
-  app.enableCors(corsConfig);
-
-  await app.listen(AppModule.port || 3000);
+  await app.listen();
 }
 bootstrap();

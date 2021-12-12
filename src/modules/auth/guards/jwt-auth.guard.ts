@@ -1,20 +1,25 @@
 import { Injectable, ExecutionContext } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { RpcException } from '@nestjs/microservices';
 import { AuthGuard } from '@nestjs/passport';
-
-import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private reflector: Reflector) {
+  constructor() {
     super();
   }
 
   canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.get(IS_PUBLIC_KEY, context.getHandler());
-    if (isPublic) {
-      return true;
+    try {
+      const newContext = context;
+      const response = newContext.switchToHttp().getRequest();
+      // console.log(response);
+      newContext.switchToHttp().getRequest().body = {
+        jwtData: response.jwtData.split(' ')[1],
+      };
+
+      return super.canActivate(newContext);
+    } catch {
+      throw new RpcException('Invalid credentials.');
     }
-    return super.canActivate(context);
   }
 }

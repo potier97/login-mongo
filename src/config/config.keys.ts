@@ -8,4 +8,7 @@ export enum Configuration {
   MONGO_CONNECTION = 'MONGO_CONNECTION',
   API_KEY = 'API_KEY',
   JWT_SECRET = 'JWT_SECRET',
+  AMQP_URL = 'AMQP_URL',
+  AMQP_QUEUE = 'AMQP_QUEUE',
+  AMQP_NAME = 'AMQP_NAME',
 }

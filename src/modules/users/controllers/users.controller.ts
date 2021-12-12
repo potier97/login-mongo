@@ -1,60 +1,82 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Body,
-  Put,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Logger, UsePipes } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { MessagePattern } from '@nestjs/microservices';
 
+//Importados
 import { UsersService } from '../services/users.service';
 import { CreateUserDto, UpdateUserDto } from '../dtos/user.dto';
-import { JwtAuthGuard } from '@modules/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@modules/auth/guards/roles.guard';
-import { Roles } from '@modules/auth/decorators/roles.decorator';
-import { Public } from '@modules/auth/decorators/public.decorator';
-import { Role } from '@modules/auth/models/roles.model';
+import { User } from '../entities/user.entity';
+import {
+  createUserTp,
+  getAllUsersTp,
+  getUserByIdTp,
+  updateUserTp,
+  deleteUserTp,
+} from '@configdata/path';
+import { MongoIdPipe } from 'src/common/mongo-id-pipe/mongo-id.pipe';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
+
   constructor(private usersService: UsersService) {}
 
-  @Get()
-  @Roles(Role.ADMIN)
-  findAll() {
+  @MessagePattern(getAllUsersTp)
+  async getAll(): Promise<User[]> {
     return this.usersService.findAll();
   }
 
-  @Get(':id')
-  get(@Param('id') id: string) {
+  @UsePipes(new MongoIdPipe())
+  @MessagePattern(getUserByIdTp)
+  async getOne(id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
 
-  @Post(':id/orders')
-  getOrders(@Param('id') id: string) {
-    return this.usersService.getOrdersByUser(id);
+  @MessagePattern(createUserTp)
+  async create(body: CreateUserDto) {
+    return this.usersService.create(body);
   }
 
-  @Post()
-  @Public()
-  create(@Body() payload: CreateUserDto) {
-    return this.usersService.create(payload);
+  @MessagePattern(updateUserTp)
+  async update(data: any): Promise<User> {
+    const id: string = data.id;
+    const body: UpdateUserDto = data.body;
+    return this.usersService.update(id, body);
   }
 
-  @Put(':id')
-  @Public()
-  update(@Param('id') id: string, @Body() payload: UpdateUserDto) {
-    return this.usersService.update(id, payload);
-  }
-
-  @Delete(':id')
-  @Public()
-  remove(@Param('id') id: string) {
+  @UsePipes(new MongoIdPipe())
+  @MessagePattern(deleteUserTp)
+  async delete(id: string): Promise<boolean> {
     return this.usersService.remove(id);
   }
+
+  // @Get()
+  // @Roles(Role.ADMIN)
+  // findAll() {
+  //   return this.usersService.findAll();
+  // }
+
+  // @Get(':id')
+  // get(@Param('id') id: string) {
+  //   return this.usersService.findOne(id);
+  // }
+
+  // @Post()
+  // @Public()
+  // create(@Body() payload: CreateUserDto) {
+  //   return this.usersService.create(payload);
+  // }
+
+  // @Put(':id')
+  // @Public()
+  // update(@Param('id') id: string, @Body() payload: UpdateUserDto) {
+  //   return this.usersService.update(id, payload);
+  // }
+
+  // @Delete(':id')
+  // @Public()
+  // remove(@Param('id') id: string) {
+  //   return this.usersService.remove(id);
+  // }
 }

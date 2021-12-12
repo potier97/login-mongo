@@ -23,6 +23,10 @@ import envConfig from './env-config';
         MONGO_CONNECTION: Joi.string().required(),
         //CONEXION SEGURIDAD
         API_KEY: Joi.string().required(),
+        // Conexión a RABITMQ
+        AMQP_URL: Joi.string().required(),
+        AMQP_QUEUE: Joi.string().required(),
+        AMQP_NAME: Joi.string().required(),
       }),
     }),
   ],

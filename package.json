@@ -27,7 +27,11 @@
     "docker:run:prod": "docker run -dp 4200:3002 tienda-dok-prod",
     "compose:up:prod": "docker-compose up -d prod",
     "compose:up:dev": "docker-compose up -d dev",
-    "compose:down": "docker-compose down"
+    "compose:down": "docker-compose down",
+    "heroku:login": "heroku login",
+    "heroku:container": "heroku container:login",
+    "heroku:container:push": "heroku container:push web -a login-commerce-back",
+    "heroku:container:release": "heroku container:release web -a login-commerce-back"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -35,11 +39,14 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/mapped-types": "^1.0.1",
+    "@nestjs/microservices": "^8.2.3",
     "@nestjs/mongoose": "^9.0.1",
     "@nestjs/passport": "^8.0.1",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/schedule": "^1.0.2",
     "@nestjs/swagger": "^5.1.5",
+    "amqp-connection-manager": "^3.7.0",
+    "amqplib": "^0.8.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",

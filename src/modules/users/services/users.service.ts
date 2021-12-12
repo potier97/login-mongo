@@ -27,16 +27,6 @@ export class UsersService {
     return this.userModel.findById(id);
   }
 
-  async getOrdersByUser(userId: string) {
-    const user = await this.findOne(userId);
-    return {
-      date: new Date(),
-      user,
-      // products: this.productsService.findAll(),
-      products: [],
-    };
-  }
-
   async create(data: CreateUserDto) {
     const newModel = new this.userModel(data);
     const hashPassword = await bcrypt.hash(newModel.password, 10);
@@ -48,6 +38,12 @@ export class UsersService {
 
   findByEmail(email: string) {
     return this.userModel.findOne({ email }).exec();
+  }
+
+  async getPayloadUserAuth(email: string): Promise<User> {
+    const data = await this.userModel.findOne({ email }).exec();
+    // const { password, ...rta } = data.toJSON();
+    return data;
   }
 
   async update(id: string, changes: UpdateUserDto) {
@@ -67,7 +63,7 @@ export class UsersService {
   remove(id: string) {
     const result = this.userModel.findById(id);
     if (result) {
-      this.userModel.findByIdAndDelete(id);
+      this.userModel.findByIdAndDelete(id).exec();
       return true;
     }
     return false;
