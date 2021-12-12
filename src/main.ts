@@ -20,10 +20,13 @@ async function bootstrap() {
     },
   };
 
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AppModule,
-    microserviceOptions,
-  );
+  const app = await NestFactory.create(AppModule);
+  app.connectMicroservice(microserviceOptions);
+
+  // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  //   AppModule,
+  //   microserviceOptions,
+  // );
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -34,6 +37,8 @@ async function bootstrap() {
     }),
   );
 
-  await app.listen();
+  // await app.listen();
+  await app.startAllMicroservices();
+  await app.listen(AppModule.port || 3000);
 }
 bootstrap();
