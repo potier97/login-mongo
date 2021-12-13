@@ -1,15 +1,16 @@
-import { Controller, Logger, UseGuards } from '@nestjs/common';
+import { Controller, Logger, UseGuards, Post } from '@nestjs/common';
 import { CustomAuthGuard } from '../guards/custom-auth.guard';
 import { MessagePattern } from '@nestjs/microservices';
 
 //Importados
 import { AuthService } from '../services/auth.service';
-import { loginUserTp, validateJWTTp } from '@configdata/path';
+import { loginUserTp } from '@configdata/path';
 import { AuthDto } from '../dto/auth.dto';
 import { UsersService } from '@modules/users/services/users.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { validateJWTTp } from '@configdata/path';
 
-@Controller()
+@Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
@@ -17,13 +18,6 @@ export class AuthController {
     private authService: AuthService,
     private usersService: UsersService,
   ) {}
-
-  // @UseGuards(AuthGuard('local'))
-  // @Post('login')
-  // logind(@Req() req: Request) {
-  //   const user = req.user as User;
-  //   return this.authService.generateJWT(user);
-  // }
 
   @UseGuards(CustomAuthGuard)
   @MessagePattern(loginUserTp)
@@ -42,7 +36,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @MessagePattern(validateJWTTp)
+  @Post()
   async validateTokeb(): Promise<boolean> {
     try {
       // console.log(jwt);

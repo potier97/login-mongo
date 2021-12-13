@@ -1,8 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import config from '@configdata/env-config';
+
+const corsConfig: CorsOptions = {
+  origin: '*',
+  methods: 'GET,HEAD,PUT,POST,DELETE',
+  preflightContinue: false,
+  // allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['*'],
+};
 
 async function bootstrap() {
   const appConfig = config().amq;
@@ -41,6 +50,10 @@ async function bootstrap() {
 
   // await app.listen();
   await app.startAllMicroservices();
+
+  // CORS
+  app.enableCors(corsConfig);
+
   await app.listen(AppModule.port || 3000);
 }
 bootstrap();

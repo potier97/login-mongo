@@ -13,7 +13,8 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     @Inject(envConfig.KEY) configService: ConfigType<typeof envConfig>,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromBodyField('jwtData'),
+      // jwtFromRequest: ExtractJwt.fromBodyField('jwtData'),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: configService.jwtSecret,
     });
