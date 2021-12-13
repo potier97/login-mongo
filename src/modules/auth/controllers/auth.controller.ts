@@ -1,10 +1,6 @@
 import { Controller, Logger, UseGuards } from '@nestjs/common';
 import { CustomAuthGuard } from '../guards/custom-auth.guard';
-import {
-  EventPattern,
-  MessagePattern,
-  RpcException,
-} from '@nestjs/microservices';
+import { MessagePattern, RpcException } from '@nestjs/microservices';
 
 //Importados
 import { AuthService } from '../services/auth.service';
@@ -13,7 +9,7 @@ import { AuthDto } from '../dto/auth.dto';
 import { UsersService } from '@modules/users/services/users.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
@@ -46,11 +42,10 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @MessagePattern('onValidateJWTTp')
-  validateTokeb(): boolean {
+  @MessagePattern(validateJWTTp)
+  async validateTokeb(jwt: any): Promise<boolean> {
     try {
       // console.log(jwt);
-      // console.log('este es otro')
       return true;
     } catch {
       throw new RpcException('Invalid credentials.');

@@ -31,7 +31,8 @@
     "heroku:login": "heroku login",
     "heroku:container": "heroku container:login",
     "heroku:container:push": "heroku container:push web -a login-commerce-back",
-    "heroku:container:release": "heroku container:release web -a login-commerce-back"
+    "heroku:container:release": "heroku container:release web -a login-commerce-back",
+    "heroku:complete": "yarn heroku:container && yarn heroku:container:push && yarn heroku:container:release"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
