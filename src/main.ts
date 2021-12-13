@@ -30,7 +30,7 @@ async function bootstrap() {
   };
 
   const app = await NestFactory.create(AppModule);
-  const microservice = app.connectMicroservice(microserviceOptions, {
+  app.connectMicroservice(microserviceOptions, {
     inheritAppConfig: true,
   });
 

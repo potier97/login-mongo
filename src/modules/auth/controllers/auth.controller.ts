@@ -8,7 +8,6 @@ import { loginUserTp } from '@configdata/path';
 import { AuthDto } from '../dto/auth.dto';
 import { UsersService } from '@modules/users/services/users.service';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
-import { validateJWTTp } from '@configdata/path';
 
 @Controller('auth')
 export class AuthController {
