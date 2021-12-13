@@ -14,9 +14,13 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   }
 
   async validate(email: string, password: string) {
+    console.log('Usuario -> ', email);
+    console.log('Contraseña -> ', password);
     const user = await this.authService.validateUser(email, password);
     if (!user) {
-      throw new UnauthorizedException('not allow');
+      throw new UnauthorizedException(
+        'El usuario no se encuentra en la base de datos',
+      );
     }
     return user;
   }

@@ -12,7 +12,6 @@ import { AuthController } from './controllers/auth.controller';
 import { UsersModule } from '@modules/users/users.module';
 
 import envConfig from '@configdata/env-config';
-// import { UsersService } from '@modules/users/services/users.service';
 
 @Module({
   imports: [
@@ -24,7 +23,7 @@ import envConfig from '@configdata/env-config';
         return {
           secret: configService.jwtSecret,
           signOptions: {
-            expiresIn: '2d',
+            expiresIn: '5d',
           },
         };
       },
