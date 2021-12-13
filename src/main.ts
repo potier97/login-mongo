@@ -21,7 +21,9 @@ async function bootstrap() {
   };
 
   const app = await NestFactory.create(AppModule);
-  app.connectMicroservice(microserviceOptions);
+  const microservice = app.connectMicroservice(microserviceOptions, {
+    inheritAppConfig: true,
+  });
 
   // const app = await NestFactory.createMicroservice<MicroserviceOptions>(
   //   AppModule,
